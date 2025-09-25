@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EduSnap</title>
+  <meta name="theme-color" content="#4F46E5" />
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <!-- Tailwind via CDN (works on GitHub Pages) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-gray-100">
+  <div id="app" class="min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+      <div class="max-w-6xl mx-auto px-4 py-6">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-camera-retro text-2xl"></i>
+            <h1 class="text-2xl font-bold">EduSnap</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition" id="btn-search">
+              <i class="fas fa-search"></i>
+            </button>
+            <button class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition" id="btn-bell">
+              <i class="fas fa-bell"></i>
+            </button>
+            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8 pb-28">
+      <!-- Storage Status -->
+      <section id="storage" class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-gray-800">Cloud Storage</h2>
+          <span class="text-sm text-gray-500">Synced to cloud</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="relative w-16 h-16">
+            <svg class="w-full h-full" viewBox="0 0 36 36">
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E5E7EB" stroke-width="3"/>
+              <path id="ring" class="progress-rotate" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#4F46E5" stroke-width="3" stroke-dasharray="100,100" stroke-dashoffset="25"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span id="ringPct" class="text-xs font-bold text-gray-700">0%</span>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between mb-1">
+              <span id="usedText" class="text-sm font-medium text-gray-700">Used: 0MB</span>
+              <span class="text-sm font-medium text-gray-700">5GB total</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div id="usedBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Photos sync to cloud to save phone space</p>
+            <p id="countText" class="text-xs text-gray-400"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <button id="action-capture" class="relative bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center card-hover">
+          <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+            <i class="fas fa-camera text-blue-600 text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-gray-700">Capture Slides</span>
+        </button>
+        <button id="action-notes" class="relative bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center card-hover">
+          <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-2">
+            <i class="fas fa-book-open text-green-600 text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-gray-700">View Notes</span>
+        </button>
+        <button id="action-ai" class="relative bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center card-hover">
+          <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
+            <i class="fas fa-robot text-purple-600 text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-gray-700">AI Assistant</span>
+        </button>
+        <button id="action-vocab" class="relative bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center card-hover">
+          <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mb-2">
+            <i class="fas fa-list-ol text-yellow-600 text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-gray-700">Vocab Lists</span>
+        </button>
+      </section>
+
+      <!-- Recent Documents -->
+      <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-gray-800">Recent Documents</h2>
+          <button id="viewAll" class="text-sm text-blue-600 font-medium">View All</button>
+        </div>
+        <div id="docGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- cards injected by JS -->
+        </div>
+      </section>
+
+      <!-- Camera Preview -->
+      <section class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-md p-6 text-white mb-8">
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 mb-6 md:mb-0 md:pr-6">
+            <h2 class="text-2xl font-bold mb-3">Capture Perfect Slides Every Time</h2>
+            <p class="mb-4">Smart camera detects slides and enhances text for clear study materials.</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-white/20 px-3 py-1 rounded-full">Auto-crop</span>
+              <span class="text-xs bg-white/20 px-3 py-1 rounded-full">Glare removal</span>
+              <span class="text-xs bg-white/20 px-3 py-1 rounded-full">Text enhancement</span>
+            </div>
+            <button id="btnSnap" class="bg-white text-blue-600 font-medium px-6 py-2 rounded-full flex items-center">
+              <i class="fas fa-camera mr-2"></i>
+              Open Camera
+            </button>
+          </div>
+          <div class="md:w-1/2 relative w-full">
+            <div class="bg-black/20 rounded-xl overflow-hidden border-2 border-white/20">
+              <video id="video" class="w-full h-64 object-cover" playsinline muted></video>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-around">
+          <a href="#" class="py-3 px-4 flex flex-col items-center text-blue-600">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs mt-1">Home</span>
+          </a>
+          <a href="#" class="py-3 px-4 flex flex-col items-center text-gray-500">
+            <i class="fas fa-book text-lg"></i>
+            <span class="text-xs mt-1">Classes</span>
+          </a>
+          <a href="#" id="navCapture" class="py-3 px-4 flex flex-col items-center text-gray-500">
+            <i class="fas fa-camera text-lg"></i>
+            <span class="text-xs mt-1">Capture</span>
+          </a>
+          <a href="#" id="navAI" class="py-3 px-4 flex flex-col items-center text-gray-500">
+            <i class="fas fa-robot text-lg"></i>
+            <span class="text-xs mt-1">AI Tools</span>
+          </a>
+          <a href="#" class="py-3 px-4 flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-xs mt-1">Profile</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <script src="assets/db.js"></script>
+  <script src="assets/ai.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
